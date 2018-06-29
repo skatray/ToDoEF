@@ -1,0 +1,62 @@
+﻿@model ToDoEF.Models.Tablelist
+
+@{
+    
+  
+    //= new ModelContext();
+    /*  var Query = from l in context.TablelistSet
+                  join g in context.TablegroupSet on l.Id equals g.Id
+                  select new
+                  {
+                      Task = l.Task,
+                      Group = g.Name
+
+                  };
+      Model. */
+
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Details</title>
+</head>
+<body>
+
+<div>
+    <h4>Tablelist</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.TaskName)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.TaskName)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.DateStart)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.DateStart)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.DateEnd)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.DateEnd)
+        </dd>
+       
+        <dd>
+            <p></p>
+        </dd>
+      
+    </dl>
+</div>
+<div>
+    <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |
+    <a asp-action="Index">Back to List</a>
+</div>
+</body>
+</html>

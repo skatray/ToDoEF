@@ -7,8 +7,11 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.CodeAnalysis;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using ToDoEF.Models;
 
 namespace ToDoEF
 {
@@ -30,9 +33,12 @@ namespace ToDoEF
                 options.CheckConsentNeeded = context => true;
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
-
-
+            string connection = Configuration.GetConnectionString("DefaultConnection");
+             services.AddDbContext<Models.ModelContext>(options => options.UseSqlServer(connection));
+         //   services.AddDbContext<Models.ModelContext>(options => options.UseSqlServer(String.Format(@"
+         //   Data Source = (LocalDB)\\MSSQLLocalDB; AttachDbFilename ={0}\db\tododb.mdf; Persist Security Info = True; User ID = root; Password = root; Connect Timeout = 30", Location)));
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+            services.AddTransient<ToDoEF.Controllers.HomeController,ToDoEF.Controllers.HomeController>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -48,7 +54,7 @@ namespace ToDoEF
                 app.UseHsts();
             }
 
-            app.UseHttpsRedirection();
+          //  app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseCookiePolicy();
 
@@ -57,7 +63,9 @@ namespace ToDoEF
                 routes.MapRoute(
                     name: "default",
                     template: "{controller=Home}/{action=Index}/{id?}");
-            });
+            });           
+            
+           
         }
     }
 }

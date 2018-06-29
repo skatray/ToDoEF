@@ -1,0 +1,45 @@
+﻿@model ToDoEF.Models.Tablelist
+
+@{
+    ViewData["Title"] = "Edit";
+
+}
+
+<h2>Edit</h2>
+
+<h4>Tablelist</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Edit">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="Id" />
+            <div class="form-group">
+                <label asp-for="TaskName" class="control-label"></label>
+                <input asp-for="TaskName" value="@ViewBag.task" class="form-control" />
+                <span asp-validation-for="TaskName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="DateStart" class="control-label"></label>
+                <input asp-for="DateStart" value="@ViewBag.DateStart" class="form-control" />
+                <span asp-validation-for="DateStart" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="DateEnd" class="control-label"></label>
+                <input asp-for="DateEnd"value="@ViewBag.DateEnd" class="form-control" />
+                <span asp-validation-for="DateEnd" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-default" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

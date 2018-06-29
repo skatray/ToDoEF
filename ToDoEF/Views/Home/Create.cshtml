@@ -1,0 +1,51 @@
+﻿@model ToDoEF.Models.Tablelist
+
+@{
+   
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Create</title>
+</head>
+<body>
+
+<h4>Tablelist</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        @using(Html.BeginForm("Create", "Home", FormMethod.Post))
+        {
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="TaskName" class="control-label"></label>
+                <!--    <input asp-for="Task" class="form-control" name="Task" />-->
+                @Html.TextBox("TaskName")
+             
+            </div>
+            <div class="form-group">
+                <label asp-for="DateStart" class="control-label"></label>
+                <input asp-for="DateStart" class="form-control" name="DateStart" />
+               
+            </div>
+            <div class="form-group">
+                <label asp-for="DateEnd" class="control-label"></label>
+                <input asp-for="DateEnd" class="form-control" name="DateEnd" />
+               
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-default" />
+            </div>
+            }
+        </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+</body>
+</html>
