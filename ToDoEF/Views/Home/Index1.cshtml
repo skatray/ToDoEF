@@ -1,0 +1,74 @@
+﻿ @model IEnumerable<ToDoEF.Models.Tablelist>
+   
+
+    @{
+        ViewData["Title"] = "Index";
+
+
+
+    }
+
+    <h2>Index</h2>
+
+    <p>
+        <a asp-action="Create">Create New</a>   |
+        <a asp-area="" asp-controller="Tablegroups" asp-action="Index">Group</a>
+    </p>
+    @using (Html.BeginForm("Create", "Home", FormMethod.Post))
+    {
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>
+                        @Html.DisplayNameFor(Model => Model.TaskName)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.DateStart)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.DateEnd)
+
+                    </th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.OrderBy(Model => Model.TaskName))
+                {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.TaskName)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.DateStart)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.DateEnd)
+                        </td>
+                        <td></td>
+                        <td>
+                            <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                            <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                            <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                        </td>
+                    </tr>
+                }
+                <tr>
+                    <td>
+                        @Html.TextBox("TaskName")
+                    </td>
+                    <td>
+
+                        <input id="datetime-local" value="@DateTime.Now.AddHours(1).ToString("s")" min="@DateTime.Now.ToString("s")+" max="" type="datetime-local" name="DateStart">
+                    </td>
+                    <td>
+                        <input id="datetime-local" type="datetime-local" name="DateEnd">
+                    </td>
+                    <td></td>
+                    <td>
+                        <input type="submit" value="Add" class="btn btn-default" />
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    }

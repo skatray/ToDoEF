@@ -1,74 +1,84 @@
-﻿ @model IEnumerable<ToDoEF.Models.Tablelist>
-   
+﻿@model IEnumerable<ToDoEF.Models.ViewModel>;
+@{
 
-    @{
-        ViewData["Title"] = "Index";
+    var groups = Model.GroupBy(p => p.TaskName);
+}
+@*
+    For more information on enabling MVC for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
+*@
 
+<input type="button" title="Create" value="Create" onclick="location.href='@Url.Action("Addgroup", "Home")'" />
 
+@using (Html.BeginForm("Create", "Home", FormMethod.Post))
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(Model => Model.TaskName)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.DateStart)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.DateEnd)
 
-    }
-
-    <h2>Index</h2>
-
-    <p>
-        <a asp-action="Create">Create New</a>   |
-        <a asp-area="" asp-controller="Tablegroups" asp-action="Index">Group</a>
-    </p>
-    @using (Html.BeginForm("Create", "Home", FormMethod.Post))
-    {
-        <table class="table">
-            <thead>
+                </th>
+                <th>@Html.DisplayNameFor(Model => Model.Groups)</th>
+                
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var id in Model.GroupBy(id => id.Id))
+            {
                 <tr>
-                    <th>
-                        @Html.DisplayNameFor(model => model.TaskName)
-                    </th>
-                    <th>
-                        @Html.DisplayNameFor(model => model.DateStart)
-                    </th>
-                    <th>
-                        @Html.DisplayNameFor(model => model.DateEnd)
 
-                    </th>
-                    <th></th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var item in Model.OrderBy(Model => Model.TaskName))
-                {
-                    <tr>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.TaskName)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.DateStart)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.DateEnd)
-                        </td>
-                        <td></td>
-                        <td>
-                            <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                            <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                            <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-                        </td>
-                    </tr>
-                }
-                <tr>
+                    @foreach (var task in Model.Where(one => one.Id == id.Key).GroupBy(t => t.TaskName))
+                    {
+                        <td>@task.Key</td>
+                    }
+                    @foreach (var task in Model.Where(two => two.Id == id.Key).GroupBy(t => t.DateStart))
+                    {
+                        <td>@task.Key</td>
+                    }
+                    @foreach (var task in Model.Where(tree => tree.Id == id.Key).GroupBy(t => t.DateEnd))
+                    {
+                        <td>@task.Key</td>
+                    }
                     <td>
-                        @Html.TextBox("Task")
-                    </td>
-                    <td>
+                        @foreach (var task in Model.Where(one => one.Id == id.Key))
+                        {
+                        <div>@task.Groups @if(task.Groups!=null){<a asp-action="DelGroup" asp-route-Taskid="@task.TablelistId" asp-route-Groupid="@task.TablelgroupId">X</a>}</div>
 
-                        <input id="datetime-local" value="@DateTime.Now.AddHours(1).ToString("s")" min="@DateTime.Now.ToString("s")+" max="" type="datetime-local" name="DateStart">
+                        }
                     </td>
                     <td>
-                        <input id="datetime-local" type="datetime-local" name="DateEnd">
-                    </td>
-                    <td></td>
-                    <td>
-                        <input type="submit" value="Add" class="btn btn-default" />
+                    <a asp-action="Edit" asp-route-id="@id.Key">Edit</a> |
+                    <a asp-action="Details" asp-route-id="@id.Key">Details</a> |
+                    <a asp-action="Delete" asp-route-id="@id.Key">Delete</a>
                     </td>
                 </tr>
-            </tbody>
-        </table>
-    }
+            }
+            <tr>
+                <td>
+                    @Html.TextBox("TaskName")
+                </td>
+                <td>
+
+                    <input id="datetime-local" value="@DateTime.Now.AddHours(1).ToString("s")" min="@DateTime.Now.ToString("s")+" max="" type="datetime-local" name="DateStart">
+                </td>
+                <td>
+                    <input id="datetime-local" type="datetime-local" name="DateEnd">
+                </td>
+                <td>
+
+                    Html.DropDownList(Model=>Model.GroupList))
+                    
+                </td>
+                <td>
+                    <input type="submit" value="Add" class="btn btn-default" />
+                </td>
+            </tr>
+        </tbody>
+    </table>
+}

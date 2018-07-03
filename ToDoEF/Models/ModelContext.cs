@@ -25,8 +25,7 @@ namespace ToDoEF.Models
         */
         public virtual DbSet<Tablelist> TablelistSet { get; set; }
         public virtual DbSet<Tablegroup> TablegroupSet { get; set; }
-        public virtual DbSet<Tablelistgroup> TablelistTablegroup { get; set; }
-
+        public virtual DbSet<Tablelistgroup> TablelistTablegroup { get; set; }        
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Tablelistgroup>()
