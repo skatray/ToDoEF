@@ -3,7 +3,7 @@
 
     var groups = Model.GroupBy(p => p.TaskName);
 
-    var ff = (from c in Model select new { c.TablelistId, c.Groups }).Distinct();
+  
     SelectList Dropdown = new SelectList(ViewBag.Dropdown, "Id", "Name");
 
 

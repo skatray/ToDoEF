@@ -87,8 +87,7 @@ namespace ToDoEF.Controllers
                 int i = number.Next(0, max);
                 return i;
             }
-
-            //    var Tablelistgroup = new Tablelistgroup { TablegroupId = listidgroup[id(listidgroup.Count)], TablelistId = listidtask[id(listidtask.Count)] };
+            
             Tablelistgroup Tablelistgroup;
             void newTablelistgroup()
             {
@@ -224,14 +223,7 @@ namespace ToDoEF.Controllers
             var TablelistTablegroups = new Tablelistgroup();
 
 
-       /*     if (!string.IsNullOrEmpty(context.TaskName))
-            {
-                TablelistTablegroups.TablelistId = cid;
-                db.TablelistSet.Add(context);
-                db.SaveChanges();
-                // сохраняем в бд все изменения            
-            }
-            */
+      
             
                 if (context.Id == 0)
                 {
