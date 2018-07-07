@@ -13,7 +13,7 @@ namespace ToDoEF.Controllers
     
     public class HomeController : Controller
     {
-        
+         
         private readonly ModelContext _dbContext;
         ModelContext db;
         
@@ -26,7 +26,7 @@ namespace ToDoEF.Controllers
         }
         public IActionResult Index()
         {
-            var query = from l in db.TablelistSet
+           var query = from l in db.TablelistSet
 
                         join lg in db.TablelistTablegroup
                         on l.Id equals lg.TablelistId
@@ -39,11 +39,12 @@ namespace ToDoEF.Controllers
                         select new ViewModel(l.Id, l.TaskName, l.DateStart, l.DateEnd,/* y == null ? "no group" : */y.Name, x.TablelistId, x.TablegroupId);
 
 
-            SelectList groups = new SelectList(db.TablegroupSet.ToList(), "id", "Name");
-            //  Models.ViewModel.AddList(groups);
-            ViewBag.Groups = groups;
-
-
+            
+           ViewBag.Dropdown  = (from c in db.TablegroupSet select new { c.Id, c.Name }).Distinct();
+            IQueryable fdd = (from c in db.TablegroupSet select new { c.Id, c.Name }).Distinct();
+            var fd =  new SelectList(ViewBag.Dropdown, "Id", "Name");
+            fd.Where(c => c.Text == "group 1");
+       
 
 
             return View(query.ToList());           
@@ -60,10 +61,6 @@ namespace ToDoEF.Controllers
                         into g2  from y in g2.DefaultIfEmpty()
                         select new ViewModel(l.Id,l.TaskName, l.DateStart, l.DateEnd,/* y == null ? "no group" : */y.Name,x.TablelistId,x.TablegroupId);
 
-
-            SelectList groups = new SelectList(db.TablegroupSet.ToList(),"id","Name");
-          //  Models.ViewModel.AddList(groups);
-              ViewBag.Groups = groups;
 
 
             return View(query.ToList());
@@ -96,16 +93,11 @@ namespace ToDoEF.Controllers
             void newTablelistgroup()
             {
                         Tablelistgroup = new Tablelistgroup { TablegroupId = listidgroup[id(listidgroup.Count)], TablelistId = listidtask[id(listidtask.Count)] };
-              //  Tablelistgroup = new Tablelistgroup { TablelistId = 3,  TablegroupId = 1};
-                //      db.TablelistTablegroup.Add(Tablelistgroup);
-                //       db.SaveChanges();
+              
             }
             newTablelistgroup();
            
-            /*      var connect = new Tablelistgroup[]
-               {
-                    new Tablelistgroup{TablegroupId=listidgroup[id(listidgroup.Count)],TablelistId=listidtask[id(listidtask.Count)]}                
-                };*/
+           
                 List<int[]> getlistgroup = new List<int[]>();
                 foreach (var model in db.TablelistTablegroup.ToList())
                 {
@@ -128,20 +120,16 @@ namespace ToDoEF.Controllers
                     {
                         ok = true;
                     }
-                    //    Tablelistgroup = getlistgroup[i];
+                   
                 }
             }
             if (ok) { 
             db.TablelistTablegroup.Add(Tablelistgroup);
             db.SaveChanges();
             }
-            /*   foreach (Tablelistgroup s in connect)
-               {
-                   db.TablelistTablegroup.Add(s);
-               }
-               */
+            
 
-            return RedirectToAction("In");
+            return RedirectToAction("Index");
         }
         public IActionResult Details(int id)
         {
@@ -204,18 +192,64 @@ namespace ToDoEF.Controllers
             return View();
         }
         [HttpPost]
-        public IActionResult Create(Tablelist context)
-        {           
-        
-          if (!string.IsNullOrEmpty(context.TaskName))
+        public IActionResult Create(Tablelist context, int groups)
+        {
+            var TablelistTablegroups = new Tablelistgroup();
+           
+
+            if (!string.IsNullOrEmpty(context.TaskName))
             {
+                             
                 db.TablelistSet.Add(context);
-                // сохраняем в бд все изменения
-                db.SaveChanges();
-                return RedirectToAction("Index");
+                db.SaveChanges();                
+                // сохраняем в бд все изменения            
             }
-           return RedirectToAction("Create");
+            if (groups != 0)
+            {
+                if (context.Id == 0)
+                {
+                    context = db.TablelistSet.Last();
+                }
+                
+                TablelistTablegroups.TablelistId = context.Id;
+                TablelistTablegroups.TablegroupId = groups;
+                db.TablelistTablegroup.Add(TablelistTablegroups);
+                db.SaveChanges();
+            }
+            return RedirectToAction("index");
         }
+        [HttpPost]
+        public IActionResult Ccreate(Tablelist context, int cgroups,int cid)
+        {
+            var TablelistTablegroups = new Tablelistgroup();
+
+
+       /*     if (!string.IsNullOrEmpty(context.TaskName))
+            {
+                TablelistTablegroups.TablelistId = cid;
+                db.TablelistSet.Add(context);
+                db.SaveChanges();
+                // сохраняем в бд все изменения            
+            }
+            */
+            
+                if (context.Id == 0)
+                {
+                    context = db.TablelistSet.Last();
+                }
+
+                TablelistTablegroups.TablelistId = cid;
+                TablelistTablegroups.TablegroupId = cgroups;
+                db.TablelistTablegroup.Add(TablelistTablegroups);
+                db.SaveChanges();
+            
+            return RedirectToAction("index");
+        }
+
+
+
+
+
         [HttpGet]
         public IActionResult Delete(int id)
         {
@@ -241,9 +275,9 @@ namespace ToDoEF.Controllers
 
                 // сохраняем в бд все изменения
                 db.SaveChanges();
-                return RedirectToAction("In");
+                return RedirectToAction("Index");
             }
-            return RedirectToAction("In");
+            return RedirectToAction("Index");
         }
 
 

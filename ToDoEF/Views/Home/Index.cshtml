@@ -2,66 +2,101 @@
 @{
 
     var groups = Model.GroupBy(p => p.TaskName);
+
+    var ff = (from c in Model select new { c.TablelistId, c.Groups }).Distinct();
+    SelectList Dropdown = new SelectList(ViewBag.Dropdown, "Id", "Name");
+
+
 }
 @*
     For more information on enabling MVC for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
 *@
 
-<input type="button" title="Create" value="Create" onclick="location.href='@Url.Action("Addgroup", "Home")'" />
+<p>
+    <a asp-action="Create">Create New</a>   |
+    <a asp-area="" asp-controller="Tablegroups" asp-action="Index">Group</a> | <input type="button" title="Create random link" value="Create random link" onclick="location.href='@Url.Action("Addgroup", "Home")'" />
+</p>
 
-@using (Html.BeginForm("Create", "Home", FormMethod.Post))
-{
-    <table class="table">
-        <thead>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(Model => Model.TaskName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.DateStart)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.DateEnd)
+
+            </th>
+            <th>@Html.DisplayNameFor(Model => Model.Groups)</th>
+
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var id in Model.Where(e => e.DateEnd > DateTime.Now || e.DateEnd == null).GroupBy(id => id.Id))
+        {
             <tr>
-                <th>
-                    @Html.DisplayNameFor(Model => Model.TaskName)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.DateStart)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.DateEnd)
 
-                </th>
-                <th>@Html.DisplayNameFor(Model => Model.Groups)</th>
-                
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var id in Model.GroupBy(id => id.Id))
-            {
-                <tr>
+                @foreach (var task in Model.Where(one => one.Id == id.Key).GroupBy(t => t.TaskName))
+                {
+                    <td>@task.Key</td>
+                }
+                @foreach (var task in Model.Where(two => two.Id == id.Key).GroupBy(t => t.DateStart))
+                {
+                    <td>@task.Key</td>
+                }
+                @foreach (var task in Model.Where(tree => tree.Id == id.Key).GroupBy(t => t.DateEnd))
+                {
+                    <td>@task.Key</td>
+                }
+                @{
+                    List<SelectListItem> List2 = new List<SelectListItem>(Dropdown);
 
-                    @foreach (var task in Model.Where(one => one.Id == id.Key).GroupBy(t => t.TaskName))
+                }
+                <td>
+                    @foreach (var task in Model.Where(one => one.Id == id.Key))
                     {
-                        <td>@task.Key</td>
+                        <div>
+                            <a asp-area="" asp-controller="Tablegroups" asp-action="Details" asp-route-id="@task.TablelgroupId">@task.Groups</a> @if (task.Groups != null)
+                            {<a asp-action="DelGroup" asp-route-Taskid="@task.TablelistId" asp-route-Groupid="@task.TablelgroupId">X</a>}
+                        </div>
+
+                        var f = List2.Find(ddf => ddf.Value == task.TablelgroupId.ToString());
+                        List2.Remove(f);
+
                     }
-                    @foreach (var task in Model.Where(two => two.Id == id.Key).GroupBy(t => t.DateStart))
+
+                    @using (Html.BeginForm("Ccreate", "Home", FormMethod.Post))
                     {
-                        <td>@task.Key</td>
-                    }
-                    @foreach (var task in Model.Where(tree => tree.Id == id.Key).GroupBy(t => t.DateEnd))
-                    {
-                        <td>@task.Key</td>
-                    }
-                    <td>
-                        @foreach (var task in Model.Where(one => one.Id == id.Key))
+
+
+                        <input type="hidden" name="cId" value="@id.Key">
+                        @if (List2.Count != 0)
                         {
-                        <div>@task.Groups @if(task.Groups!=null){<a asp-action="DelGroup" asp-route-Taskid="@task.TablelistId" asp-route-Groupid="@task.TablelgroupId">X</a>}</div>
+                            @Html.DropDownList("cgroups", List2, "no group");
 
+                            <input type="submit" value="Add" class="btn btn-default" />
                         }
-                    </td>
-                    <td>
+                    }
+                </td>
+                <td>
                     <a asp-action="Edit" asp-route-id="@id.Key">Edit</a> |
                     <a asp-action="Details" asp-route-id="@id.Key">Details</a> |
                     <a asp-action="Delete" asp-route-id="@id.Key">Delete</a>
-                    </td>
-                </tr>
-            }
+                </td>
+            </tr>
+
+        }
+        @using (Html.BeginForm("Create", "Home", FormMethod.Post))
+        {
             <tr>
                 <td>
+
                     @Html.TextBox("TaskName")
+                 
                 </td>
                 <td>
 
@@ -71,14 +106,15 @@
                     <input id="datetime-local" type="datetime-local" name="DateEnd">
                 </td>
                 <td>
-
-                    Html.DropDownList(Model=>Model.GroupList))
-                    
+                    @Html.DropDownList("groups", new SelectList(ViewBag.Dropdown, "Id", "Name"), "no group")
                 </td>
                 <td>
                     <input type="submit" value="Add" class="btn btn-default" />
                 </td>
+
             </tr>
-        </tbody>
-    </table>
-}
+
+
+        }
+    </tbody>
+</table>

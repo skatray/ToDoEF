@@ -11,6 +11,7 @@ namespace ToDoEF.Controllers
 {
     public class TablegroupsController : Controller
     {
+    
         private readonly ModelContext _context;
 
         public TablegroupsController(ModelContext context)
@@ -44,6 +45,10 @@ namespace ToDoEF.Controllers
             {
                 return NotFound();
             }
+           
+
+
+
 
             var tablegroup = await _context.TablegroupSet
                 .FirstOrDefaultAsync(m => m.Id == id);

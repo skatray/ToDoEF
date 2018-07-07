@@ -46,8 +46,7 @@ namespace ToDoEF.Models
         public DateTime? DateEnd { get; set; }
         public string Groups { get; set; }
         public int?  TablelistId { get; set; }
-        public int? TablelgroupId { get; set; }
-        public Tablegroup tablegroup { get; set; }
+        public int? TablelgroupId { get; set; }        
         //   public Tablegroup Tablegroup { get; set;}
         //   public ICollection<Tablelistgroup> Tablelistgroups { get; set; }
         //   public Tablelist Tablelist { get; set; }
@@ -66,5 +65,9 @@ namespace ToDoEF.Models
         
 }
 
-
+    public enum Gender
+    {
+        Male,
+        Female
+    }
 }
